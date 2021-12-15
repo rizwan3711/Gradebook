@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 
-// first, we need to accept that 
+// first, we need to accept that
 char** inputCategories(){
     const char *cats[10];
     int i = 0;
