@@ -8,23 +8,16 @@
 #include <stdio.h>
 #include <string.h>
 
-// first, we need to accept that
-char** inputCategories(){
-    const char *cats[10];
-    int i = 0;
-    char input[50];
-    printf("Enter the categories of your class, pressing enter each category. Press ` when you are done.\n");
-    while(input != "`"){
-        scanf("%s", &input);
-        cats[i] = input;
-        i++;
+// TODO: ask user for list of classes and store it, so you are making an array of character arrays
+// TODO: state the number of classes, and ask them to enter the corresponding number in order to enter that class
+// TODO: when in a class menu, have a button that allows the user to go back, and another button which calculates the weight of
+int main(){
+    FILE *fptr;
+    if(fopen("gradebook.txt", "w") == NULL){
+        printf("Welcome to the gradebook program! Please enter the names of the classes you have taken this quarter!");
+        //function which accepts multiple grades
     }
-    return *cats;
-}
-
-int main(int argc, const char * argv[]) {
-    // insert code here...
-    char *catgories[10];
-    categories = inputCategories();
-    return 0;
+    else{
+        //give the user the option to either view one of their classes, or edit the list of classes which they currently have
+    }
 }
