@@ -21,25 +21,10 @@ void classWriter(FILE *pointer){
     pointer = fopen("gradebook.txt", "w");
     printf("Please enter the names of your classes, pressing enter after each class(< 50 characters). When you are finished enterring your classes, press the ` key, and then press enter.\n");
     char input[50];
-    //scanf("%[^\n]s", input);
+    
     fgets(input, sizeof(input), stdin);
     
-    /*
-    int i = 0;
-    while(input[i] != '\0'){
-        if(input[i] == ' '){
-            input[i] = '_';
-        }
-        i++;
-    }
-    */
-    /*
-    printf("\n");
-    printf("%s", input);
-    printf("\n");
-    printf("%d", strcmp(input, "`"));
-    printf("\n");
-     */
+    
     int i = 0;
     while(input[i] != '\0'){
         if(input[i] == '\n'){
@@ -52,28 +37,8 @@ void classWriter(FILE *pointer){
         
         fprintf(pointer, "%s\n", input);
         
-        
-        //scanf("%[^\n]s", input);
         fgets(input, sizeof(input), stdin);
         
-        /*
-        printf("\n");
-        printf("%s", input);
-        printf("\n");
-        printf("%d", strcmp(input, "`"));
-        printf("\n");
-         */
-        
-        /*
-        int i = 0;
-        while(input[i] != '\0'){
-            if(input[i] == ' '){
-                input[i] = '_';
-                printf("space found\n");
-            }
-            i++;
-        }
-         */
         int i = 0;
         while(input[i] != '\0'){
             if(input[i] == '\n'){
@@ -104,15 +69,7 @@ int main(){
         char line[256];
         
         while( fgets(line, sizeof(line), fptr) ){
-            //int i = 0;
-            /*
-            while(line[i] != '\0'){
-                if(line[i] == '_'){
-                    line[i] = ' ';
-                }
-                i++;
-            }
-             */
+            
             printf("%s" , line);
         }
         printf("\n");
