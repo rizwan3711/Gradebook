@@ -5,7 +5,7 @@
 //  Created by Rizwan Syed on 10/30/21.
 //
 
-#include <stdio.h>
+#include <stdio.h> 
 #include <string.h>
 #include <stdlib.h>
 
@@ -14,7 +14,13 @@
 // TODO: when in a class menu, have a button that allows the user to go back, and another button which calculates the weight of
 typedef struct{
     char name[50];
+    double weight;
+} cat;
+
+typedef struct{
+    char name[50];
     int pos;
+    cat cats[10];
 } class;
 
 void classWriter(FILE *pointer){
@@ -52,7 +58,7 @@ void classWriter(FILE *pointer){
     
 }
 
-void classEditor(int pos, class classes[]){
+void classMenu(int pos, class classes[]){
     //first, check if they have ever enterred any grades for this class before
     //pointer = fopen("gradebook.txt", "r");
     FILE *pointer;
@@ -92,12 +98,75 @@ void classEditor(int pos, class classes[]){
     pointer = fopen(fileName, "r");
     if(pointer == NULL){
         pointer = fopen(fileName, "w");
+        printf("It seems you have never enterred information for this class before! Please enter the categories which your grade is broken down into(homework, finals, etc), pressing enter after each entry. Press ` when you are done enterring categories. You may enter up to 10 categories, each one being 50 characters or less.\n\n");
+        char catName[50];
+        int catNum = -1;
+        fgets(catName, sizeof(catName), stdin);
+        int i = 0;
+        while(catName[i] != '\0'){
+            if(catName[i] == '\n'){
+                catName[i] = '\0';
+            }
+            i++;
+            //printf("Enterred\n");
+        }
+        //MARK: poggies
+        while(strcmp(catName, "`") != 0){
+            //printf("Enterred\n");
+            //printf("%d\n", catNum);
+            strcpy(classes[pos-1].cats[catNum].name, catName);
+            //printf("%s\n", classes[pos-1].cats[catNum].name);
+            catNum++;
+            fprintf(pointer, "%s\n", catName);
+            fgets(catName, sizeof(catName), stdin);
+            int i = 0;
+            while(catName[i] != '\0'){
+                if(catName[i] == '\n'){
+                    catName[i] = '\0';
+                }
+                i++;
+            }
+        }
+        //printf("%d", catNum);
+       
+        printf("\nFor each of the categories printed above, enter a number for how much of your grade this category counts for. For example, if you have a final category which accounts for 50%% of your final grade, enter the number 50 for this category\n");
+        double dinput;
+        for(i = 0; i < catNum; i++){
+            printf("%s: \n", classes[pos - 1].cats[i].name);
+            //printf("poggies");
+            scanf("%lf", &dinput);
+            classes[pos - 1].cats[i].weight = dinput;
+        }
+        printf("\n\n");
+        for(i = 0; i < catNum; i++){
+            printf("%f\n", classes[pos - 1].cats[i].weight);
+        }
         
     }
+    else{
+        //function which prints your current grade in this class
+        printf("Press 1 to add any assignments, or press 2 to go back to the class selection menu\n\n");
+        int input = 0;
+        scanf("%d", &input);
+        if(input == 1){
+            char line[256];
+            while(fgets(line, sizeof(line), pointer)){
+                printf("%s", line);
+            }
+            printf("\nThe categories which you have for this class are displayed above. Enter the category which you would like to enter an assignment for, exactly as it is displayed above.\n");
+            scanf("%s", line);
+            
+        }
+        else if(input == 2){
+            //call main menu function
+        }
+    }
+    fclose(pointer);
 }
 
 int main(){
     //remove("gradebook.txt");
+    remove("math_20d.txt");
     FILE *fptr;
     fptr = fopen("gradebook.txt", "r");
     if(fptr == NULL){
@@ -138,19 +207,30 @@ int main(){
         scanf("%d", &input);
         if(input == 1){
             //call view/edit function
-            printf("You currently have %d classes in the gradebook. To view your grades for the first class displayed, press 1, to view your grades for the second class displayed above, press 2, etc. \n\n", classNum);
-            scanf("%d", &input);
+           // printf("You currently have the following %d classes in the gradebook. To view your grades for the first class displayed, press 1, to view your grades for the second class displayed above, press 2, etc. \n\n", classNum);
+            printf("You currently have the following %d classes enterred in the gradebook.\n\n", classNum);
+            fclose(fptr);
+            fptr = fopen("gradebook.txt", "r");
+            while( fgets(line, sizeof(line), fptr) ){
+                printf("%s" , line);
+            }
+            printf("\nTo view your grades for the first class displayed, press 1, to view your grades for the second class displayed above, press 2, etc. \n\n");
+            
             
             int flag = 0;
-            for(int i = 0; i < classNum; i++){
-                if(classes[i].pos == input){
-                    flag = 1;
-                    classEditor(input, classes, fptr);
-                    break;
+            while(!flag){
+                scanf("%d", &input);
+                for(int i = 0; i < classNum; i++){
+                    if(classes[i].pos == input && !flag){
+                        flag = 1;
+                        //fclose(fptr);
+                        classMenu(input, classes);
+                    }
                 }
-            }
-            if(!flag){
-                printf("Enter a valid number!\n");
+                if(!flag){
+                    printf("Enter a valid number!\n");
+                    //scanf("%d", &input);
+                }
             }
             
         }
@@ -168,7 +248,6 @@ int main(){
     
     fclose(fptr);
 
-    //remove("gradebook.txt");
     return 0;
     
 }
