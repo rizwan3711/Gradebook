@@ -97,6 +97,7 @@ void classMenu(int pos, class classes[]){
     
     pointer = fopen(fileName, "r");
     if(pointer == NULL){
+        //MARK: POGGIES
         pointer = fopen(fileName, "w");
         printf("It seems you have never enterred information for this class before! Please enter the categories which your grade is broken down into(homework, finals, etc), pressing enter after each entry. Press ` when you are done enterring categories. You may enter up to 10 categories, each one being 50 characters or less.\n\n");
         char catName[50];
@@ -140,6 +141,7 @@ void classMenu(int pos, class classes[]){
         printf("\n\n");
         for(i = 0; i < catNum; i++){
             printf("%f\n", classes[pos - 1].cats[i].weight);
+            fprintf(pointer, "%f\n", classes[pos - 1].cats[i].weight);
         }
         
     }
