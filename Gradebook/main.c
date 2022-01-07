@@ -56,6 +56,7 @@ void classWriter(FILE *pointer){
         
     }
     
+    fclose(pointer);
 }
 
 void classMenu(int pos, class classes[]){
@@ -104,30 +105,33 @@ void classMenu(int pos, class classes[]){
         int catNum = -1;
         fgets(catName, sizeof(catName), stdin);
         int i = 0;
+        
         while(catName[i] != '\0'){
             if(catName[i] == '\n'){
                 catName[i] = '\0';
             }
             i++;
-            //printf("Enterred\n");
         }
+        
         //MARK: poggies
         while(strcmp(catName, "`") != 0){
-            //printf("Enterred\n");
-            //printf("%d\n", catNum);
+            
             strcpy(classes[pos-1].cats[catNum].name, catName);
-            //printf("%s\n", classes[pos-1].cats[catNum].name);
-            catNum++;
-            fprintf(pointer, "%s\n", catName);
+            
+            catNum++; 
+            if(strcmp(catName, "\0") != 0){
+                fprintf(pointer, "%s\t", catName);
+            }
             fgets(catName, sizeof(catName), stdin);
             int i = 0;
             while(catName[i] != '\0'){
                 if(catName[i] == '\n'){
                     catName[i] = '\0';
-                }
+                } 
                 i++;
             }
         }
+        fprintf(pointer, "\n");
         //printf("%d", catNum);
        
         printf("\nFor each of the categories printed above, enter a number for how much of your grade this category counts for. For example, if you have a final category which accounts for 50%% of your final grade, enter the number 50 for this category\n");
@@ -141,7 +145,7 @@ void classMenu(int pos, class classes[]){
         printf("\n\n");
         for(i = 0; i < catNum; i++){
             printf("%f\n", classes[pos - 1].cats[i].weight);
-            fprintf(pointer, "%f\n", classes[pos - 1].cats[i].weight);
+            fprintf(pointer, "%f\t", classes[pos - 1].cats[i].weight);
         }
         
     }
@@ -155,8 +159,25 @@ void classMenu(int pos, class classes[]){
             while(fgets(line, sizeof(line), pointer)){
                 printf("%s", line);
             }
-            printf("\nThe categories which you have for this class are displayed above. Enter the category which you would like to enter an assignment for, exactly as it is displayed above.\n");
-            scanf("%s", line);
+            printf("\n\nThe categories which you have for this class are displayed above. Enter the category which you would like to enter an assignment for, exactly as it is displayed above.\n");
+            char catEntry[50];
+            scanf("%s", catEntry);
+            fclose(pointer);
+            pointer = fopen(fileName, "r");
+            while( fscanf(pointer, "%s", line) == 1 ){
+                /*
+                printf("%d\n" , strcmp(line, catEntry));
+                printf("%s %d\n", catEntry , catEntry);
+                printf("%s %d\n\n", line,  line);
+                printf("%d\n" , strcmp(line, catEntry));
+                */
+               if(strcmp(catEntry, line) == 0){
+                   fclose(pointer);
+                   fopen(fileName, "a");
+                   // CALL ASSIGNMENT ADDING FUNCTION
+                   break;
+               }
+            }
             
         }
         else if(input == 2){
@@ -166,9 +187,10 @@ void classMenu(int pos, class classes[]){
     fclose(pointer);
 }
 
+
 int main(){
     //remove("gradebook.txt");
-    remove("math_20d.txt");
+    //remove("math_20d.txt");
     FILE *fptr;
     fptr = fopen("gradebook.txt", "r");
     if(fptr == NULL){
@@ -181,7 +203,7 @@ int main(){
         int classNum = 0;
         //give the user the option to either view one of their classes, or edit the list of classes which they currently have
         printf("It seems you have used this program before! Here are the classes you currently have enterred in the gradebook: \n\n");
-        fptr = fopen("gradebook.txt", "r");
+        //fptr = fopen("gradebook.txt", "r");
         char line[256];
         
         while( fgets(line, sizeof(line), fptr) ){
@@ -253,4 +275,3 @@ int main(){
     return 0;
     
 }
-
