@@ -23,6 +23,27 @@ typedef struct{
     cat cats[10];
 } class;
 
+void assignmentWriter(FILE * pointer, char * cat){
+    printf("\nPlease enter a numerical decimal value for the grade which you received on this assignment, out of 100. If you received a 93 on you assignment, enter, 93.0\n");
+    double ans;
+    scanf("%f", &ans);
+    char line[50];
+    int counter = 0;
+    //int c = 0;
+    while( fscanf(pointer, "%s", line) == 1 ){
+        printf("%s\n", cat);
+        printf("%s\n", line);
+        if(strcmp(line, cat) == 0){
+            printf("match found!");
+            break;
+        }
+        counter++;
+    }
+    //printf("\n%d\n", c);
+    //before appending to the file, figure out which category(column), you are adding a value to. To do this, read from the beginning
+    //of the file, so you shoudl use a+ when calling fopen with your file pointer. 
+}
+
 void classWriter(FILE *pointer){
     
     pointer = fopen("gradebook.txt", "w");
@@ -173,8 +194,9 @@ void classMenu(int pos, class classes[]){
                 */
                if(strcmp(catEntry, line) == 0){
                    fclose(pointer);
-                   fopen(fileName, "a");
+                   pointer = fopen(fileName, "a+");
                    // CALL ASSIGNMENT ADDING FUNCTION
+                   assignmentWriter(pointer, line);
                    break;
                }
             }
