@@ -177,9 +177,15 @@ void classMenu(int pos, class classes[]){
         scanf("%d", &input);
         if(input == 1){
             char line[256];
+            /*
             while(fgets(line, sizeof(line), pointer)){
                 printf("%s", line);
             }
+            */
+            fscanf(pointer, "%[^\n]", line);
+            printf("%s", line);
+            //fclose(fptr);
+
             printf("\n\nThe categories which you have for this class are displayed above. Enter the category which you would like to enter an assignment for, exactly as it is displayed above.\n");
             char catEntry[50];
             scanf("%s", catEntry);
