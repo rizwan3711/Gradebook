@@ -23,18 +23,52 @@ typedef struct{
     cat cats[10];
 } class;
 
-void assignmentWriter(FILE * pointer, char * cat){
+void spaceReplacer(char *string){
+    int i = 0;
+    while(string[i] != '\0'){
+        if(string[i] == ' '){
+            string[i] = '_';
+        }
+        i++;
+    }
+}
+
+int catCounter(FILE *pointer, char *fileName){
+    int answer = 0;
+    fclose(pointer);
+    pointer = fopen(fileName, "r");
+    char line[256];
+    /*
+    fscanf(pointer, "%[^\n]", line);
+    printf("%s\n", line);
+    */
+    int pog = 0;
+    while( fgets(line, sizeof(line), pointer) ){
+        if(pog == 1){
+            break;
+        }
+        pog++;
+    }
+    int i = 0;
+    while(line[i] != '\0'){
+        if(line[i] == '\t'){
+            answer++;
+        }
+        i++;
+    }
+    //printf("%d", answer);
+    return answer;
+}
+
+void assignmentWriter(FILE * pointer, char * cat, char * fileName){
     printf("\nPlease enter a numerical decimal value for the grade which you received on this assignment, out of 100. If you received a 93 on you assignment, enter, 93.0\n");
     double ans;
-    scanf("%f", &ans);
+    scanf("%lf", &ans);
     char line[50];
     int counter = 0;
     //int c = 0;
     while( fscanf(pointer, "%s", line) == 1 ){
-        printf("%s\n", cat);
-        printf("%s\n", line);
         if(strcmp(line, cat) == 0){
-            printf("match found!");
             break;
         }
         counter++;
@@ -42,6 +76,33 @@ void assignmentWriter(FILE * pointer, char * cat){
     //printf("\n%d\n", c);
     //before appending to the file, figure out which category(column), you are adding a value to. To do this, read from the beginning
     //of the file, so you shoudl use a+ when calling fopen with your file pointer. 
+    fclose(pointer);
+    pointer = fopen(fileName, "a+");
+
+    fprintf(pointer, "\n");
+    int c = 0;
+    int c2 = 0;
+
+    //printf("%f %f \n", ans, -1.000);
+    //printf("%d\n", catCounter(pointer, fileName));
+
+    while(c2 < catCounter(pointer, fileName)){
+        fclose(pointer);
+        pointer = fopen(fileName, "a+");
+
+        if(counter == c){
+            //printf("%d\n", catCounter(pointer, fileName));
+            fprintf(pointer, "%f\t", ans);
+            //break;
+        }
+        else{
+            //printf("%d", c);
+            fprintf(pointer, "%f\t", -1.000);
+        }
+        c++;
+        c2++;
+    }
+    //catCounter(pointer, fileName);
 }
 
 void classWriter(FILE *pointer){
@@ -140,7 +201,9 @@ void classMenu(int pos, class classes[]){
             strcpy(classes[pos-1].cats[catNum].name, catName);
             
             catNum++; 
+            //HERHERHERHERHERHERHERHERHER
             if(strcmp(catName, "\0") != 0){
+                spaceReplacer(catName);
                 fprintf(pointer, "%s\t", catName);
             }
             fgets(catName, sizeof(catName), stdin);
@@ -156,18 +219,26 @@ void classMenu(int pos, class classes[]){
         //printf("%d", catNum);
        
         printf("\nFor each of the categories printed above, enter a number for how much of your grade this category counts for. For example, if you have a final category which accounts for 50%% of your final grade, enter the number 50 for this category\n");
-        double dinput;
+        double dinput = 0.0;
         for(i = 0; i < catNum; i++){
             printf("%s: \n", classes[pos - 1].cats[i].name);
-            //printf("poggies");
             scanf("%lf", &dinput);
-            classes[pos - 1].cats[i].weight = dinput;
+    
+            fprintf(pointer, "%lf\t", dinput);
+            //printf("\n%lf\n", dinput);
         }
-        printf("\n\n");
+        
+        /*
         for(i = 0; i < catNum; i++){
-            printf("%f\n", classes[pos - 1].cats[i].weight);
-            fprintf(pointer, "%f\t", classes[pos - 1].cats[i].weight);
+            //printf("%f\n", classes[pos - 1].cats[i].weight);
+            //printf("AT LEAST YOU GOT IN HERE DOE POGGGGG\n");
+            //printf("%f\n", classes[pos - 1].cats[i].weight);
+            //fprintf(pointer, "%f\t", classes[pos - 1].cats[i].weight);
+            //printf("iteration %d worked\n", i);
+            //break;
         }
+        //printf("POGGGGGGGG");
+        */
         
     }
     else{
@@ -188,21 +259,33 @@ void classMenu(int pos, class classes[]){
 
             printf("\n\nThe categories which you have for this class are displayed above. Enter the category which you would like to enter an assignment for, exactly as it is displayed above.\n");
             char catEntry[50];
-            scanf("%s", catEntry);
+            //scanf("%s", catEntry);
+            char c = getchar();
+            fgets(catEntry, sizeof(catEntry), stdin);
+            
+            //printf("\n%s\n", catEntry);
+            
+            char catEntry2[50];
+            //printf("\n%s\n", catEntry);
+            sscanf(catEntry, "%[^\t\n]", catEntry2);
+            //printf("\n%s\n", catEntry2);
+            
             fclose(pointer);
             pointer = fopen(fileName, "r");
             while( fscanf(pointer, "%s", line) == 1 ){
+                //printf("%s: ", line);
+                //printf("%d\n", strcmp(catEntry2, line));
                 /*
                 printf("%d\n" , strcmp(line, catEntry));
                 printf("%s %d\n", catEntry , catEntry);
                 printf("%s %d\n\n", line,  line);
                 printf("%d\n" , strcmp(line, catEntry));
                 */
-               if(strcmp(catEntry, line) == 0){
+               if(strcmp(catEntry2, line) == 0){
                    fclose(pointer);
-                   pointer = fopen(fileName, "a+");
+                   pointer = fopen(fileName, "r");
                    // CALL ASSIGNMENT ADDING FUNCTION
-                   assignmentWriter(pointer, line);
+                   assignmentWriter(pointer, line, fileName);
                    break;
                }
             }
@@ -212,13 +295,16 @@ void classMenu(int pos, class classes[]){
             //call main menu function
         }
     }
+    //printf("asdf\n");
     fclose(pointer);
+    //printf("full stack this shit is not working");
 }
 
 
 int main(){
     //remove("gradebook.txt");
-    //remove("math_20d.txt");
+    //remove("math_18.txt");
+    //remove("phys_2a.txt");
     FILE *fptr;
     fptr = fopen("gradebook.txt", "r");
     if(fptr == NULL){
@@ -277,6 +363,7 @@ int main(){
                         flag = 1;
                         //fclose(fptr);
                         classMenu(input, classes);
+                        break;
                     }
                 }
                 if(!flag){
@@ -284,6 +371,7 @@ int main(){
                     //scanf("%d", &input);
                 }
             }
+            //printf("here2");
             
         }
         else if(input == 2){
@@ -299,7 +387,7 @@ int main(){
     }
     
     fclose(fptr);
-
+    //printf("here1\n");
     return 0;
     
 }

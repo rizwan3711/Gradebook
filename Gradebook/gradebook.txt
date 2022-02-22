@@ -1,2 +1,2 @@
-math 20d
-mmw11
+math 18
+phys 2a
