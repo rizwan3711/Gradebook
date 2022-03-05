@@ -60,6 +60,72 @@ int catCounter(FILE *pointer, char *fileName){
     return answer;
 }
 
+double gradeCalculator(FILE * pointer, char * fileName){
+    //read each column, and multiply the average of every row except for the first 2 by .1 times the value in the 
+    //second row for that column
+
+    fclose(pointer);
+    pointer = fopen(fileName, "r");
+    char line[256];
+    
+    //CHECK IF ANY ASSIGNMENTS HAVE BEEN ADDED AND RETURN -1 IF THERE ARE NO ASSIGNMENTS YET   
+    int counter = 0;
+    while( fgets(line, sizeof(line), pointer) ){
+        counter++;
+    }
+    if(counter < 3){
+        return -1.0;
+    }
+
+    int cN = catCounter(pointer, fileName);
+    fclose(pointer);
+    pointer = fopen(fileName, "r");
+
+    //calculating grades by making an array of weights, calculating total points in each cat, and multiplying total by weight
+    counter = 0;
+    double weights[cN];
+    double totals[cN];
+    double temp;
+    double aN[cN];
+    double answer = 0.0;
+
+    for(int i = 0; i < cN; i++){
+        totals[i] = 0;
+    }
+    
+    while( fgets(line, sizeof(line), pointer) ){
+        counter++;
+        if(counter == 1){
+            for(int i = 0; i < cN; i++){
+                //printf("%s\n", line);
+                fscanf(pointer, "%lf, ", &weights[i]);
+            }
+        }
+        if(counter >= 2){
+            for(int i = 0; i < cN; i++){
+                fscanf(pointer, "%lf, ", &temp);
+                if(temp != -1.0){
+                    totals[i] += temp;
+                    aN[i] += 1.0;
+                }
+            }
+        }
+    }
+    
+    for(int i = 0; i < cN; i++){
+        answer += (totals[i]/aN[i])*(weights[i]);
+    }
+    
+    double grand = 0;
+    for(int i = 0; i < cN; i++){
+        grand += weights[i];
+    }
+    answer /= grand;
+    
+    return answer;
+
+}
+
 void assignmentWriter(FILE * pointer, char * cat, char * fileName){
     printf("\nPlease enter a numerical decimal value for the grade which you received on this assignment, out of 100. If you received a 93 on you assignment, enter, 93.0\n");
     double ans;
@@ -179,8 +245,8 @@ void classMenu(int pos, class classes[]){
     //printf("%s\n", fileName);
     
     pointer = fopen(fileName, "r");
+    //int catNum = -1;
     if(pointer == NULL){
-        //MARK: POGGIES
         pointer = fopen(fileName, "w");
         printf("It seems you have never enterred information for this class before! Please enter the categories which your grade is broken down into(homework, finals, etc), pressing enter after each entry. Press ` when you are done enterring categories. You may enter up to 10 categories, each one being 50 characters or less.\n\n");
         char catName[50];
@@ -239,11 +305,10 @@ void classMenu(int pos, class classes[]){
         }
         //printf("POGGGGGGGG");
         */
-        
     }
     else{
         //function which prints your current grade in this class
-        printf("Press 1 to add any assignments, or press 2 to go back to the class selection menu\n\n");
+        printf("Press 1 to add any assignments, press 2 to calculate your grade in the class, or press 3 to go back to the class selection menu\n\n");
         int input = 0;
         scanf("%d", &input);
         if(input == 1){
@@ -293,6 +358,15 @@ void classMenu(int pos, class classes[]){
         }
         else if(input == 2){
             //call main menu function
+            double grade = gradeCalculator(pointer, fileName);
+            if(grade == -1.0){
+                printf("It seems you have never enterred any assignments for this class before! Enter assignments before calculating your grade.");
+                printf("\n");
+            }
+            else{
+                printf("Your grade in this class is %0.2lf%c", grade, 37);
+                printf("\n");
+            }
         }
     }
     //printf("asdf\n");
