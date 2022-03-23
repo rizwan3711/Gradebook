@@ -59,7 +59,7 @@ void classAdder(FILE *pointer){
     pointer = fopen("gradebook.txt", "a");
     char input[50];
     
-    printf("Please enter the name of the class you want to add below, using less than 50 characters for the class name\n");
+    printf("\n\nPlease enter the name of the class you want to add below, using less than 50 characters for the class name\n");
     
     fgets(input, sizeof(input), stdin);
     
@@ -161,7 +161,7 @@ void classEditor(FILE * pointer){
     char line[256];
     char * classes[10];
 
-    printf("You currently have the following classes enterred in the gradebook\n\n");
+    printf("\n\nYou currently have the following classes enterred in the gradebook\n\n");
         
     int counter = 0;
     while( fgets(line, sizeof(line), pointer) ){
@@ -174,7 +174,7 @@ void classEditor(FILE * pointer){
     fclose(pointer);
 
     int input;
-    printf("Press 1 to add any classes to the gradebook, and press 2 to delete any classes\n");
+    printf("Press 1 to add any classes to the gradebook, press 2 to delete any classes, or press 3 to return to the class selection menu\n");
     scanf("%d", &input);
 
     int flag = 0;
@@ -186,6 +186,9 @@ void classEditor(FILE * pointer){
         else if(input == 2){
             classDeleter(pointer);
             flag = 1;
+        }
+        else if(input == 3){
+            break;
         }
         if(!flag){
             printf("Please enter a valid input!");
@@ -471,28 +474,35 @@ int main(){
     //remove("phys_2a.txt");
     FILE *fptr;
     fptr = fopen("gradebook.txt", "r");
+    char line[256];
+    int classNum = 0;
+    class classes[classNum];
     if(fptr == NULL){
         printf("Welcome to the gradebook program! Please enter the names of the classes you have taken this quarter!\n\n");
         classWriter(fptr);
     }
-    
     else{
-        int classNum = 0;
         //give the user the option to either view one of their classes, or edit the list of classes which they currently have
+        //printf("It seems you have used this program before! Here are the classes you currently have enterred in the gradebook: \n\n");
+        
+        int input;
+
+        int validInput = 1;
+        while(1){
+
+        if(validInput){
+        fptr = fopen("gradebook.txt", "r");
         printf("It seems you have used this program before! Here are the classes you currently have enterred in the gradebook: \n\n");
-        char line[256];
         
         while( fgets(line, sizeof(line), fptr) ){
             printf("%s" , line);
-            classNum++;
-            
+            classNum++;   
         }
         printf("\n");
         
         fclose(fptr);
         fptr = fopen("gradebook.txt", "r");
         
-        class classes[classNum];
         classNum = 0;
         while( fgets(line, sizeof(line), fptr) ){
             classNum++;
@@ -502,13 +512,14 @@ int main(){
         
         fclose(fptr);
         
-        int input;
-        printf("press 1 to view/edit your grades for a class, 2 to edit your list of classes, and 3 to exit the program\n\n");
+        }
+
+        printf("\n\npress 1 to view/edit your grades for a class, 2 to edit your list of classes, and 3 to exit the program\n\n");
         scanf("%d", &input);
         if(input == 1){
-
+            validInput = 1;
            // printf("You currently have the following %d classes in the gradebook. To view your grades for the first class displayed, press 1, to view your grades for the second class displayed above, press 2, etc. \n\n", classNum);
-            printf("You currently have the following %d classes enterred in the gradebook.\n\n", classNum);
+            printf("\n\nYou currently have the following %d classes enterred in the gradebook.\n\n", classNum);
             
             fptr = fopen("gradebook.txt", "r");
             while( fgets(line, sizeof(line), fptr) ){
@@ -534,15 +545,21 @@ int main(){
             
         }
         else if(input == 2){
+            validInput = 1;
             //make sure that, lets say you have a file containing the grades of Math20D with a lot of data on there. when you remove math20d from the gradebook, make sure you are also removing the math20d text file with all the data for that class
             classEditor(fptr);
         }
         else if(input == 3){
+            validInput = 1;
             exit(0);
         }
         else{
             printf("Please enter a valid input \n\n");
+            validInput = 0;
         }
+        
+        }
+
     }
     
     fclose(fptr);
