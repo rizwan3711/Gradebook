@@ -88,6 +88,8 @@ void classDeleter(FILE * pointer){
     char curr;
     int flag = 0;
     int line_number;
+    char fileName[54];
+    int i = 0;
     scanf("%d", &input);
     while(!flag){
             
@@ -98,6 +100,12 @@ void classDeleter(FILE * pointer){
         while(1){
             if(input != line_number){
                 putc(curr, temp);
+            }
+            else{
+                if(curr != '\n'){
+                    fileName[i] = curr;
+                    i++;
+                }
             }
             curr = getc(pointer);
             if(curr == '\n'){
@@ -112,6 +120,7 @@ void classDeleter(FILE * pointer){
         if(!flag){
             printf("Enter a valid number!\n");
             scanf("%d", &input);
+            break;
         }
     }
 
@@ -134,6 +143,17 @@ void classDeleter(FILE * pointer){
     fclose(temp);
 
     remove("temp.txt");
+
+    //i++;
+    printf("%s", fileName);
+    char extension[4] = ".txt";
+    for(int j = 0; j < 4; j++){
+        fileName[i] = extension[j];
+        i++;
+    }
+    fileName[i] = '\0';
+    spaceReplacer(fileName);
+    remove(fileName);
 }
 
 void classEditor(FILE * pointer){
