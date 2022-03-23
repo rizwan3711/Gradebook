@@ -59,7 +59,7 @@ void classAdder(FILE *pointer){
     pointer = fopen("gradebook.txt", "a");
     char input[50];
     
-    printf("\nPlease enter the name of the class you want to add below, using less than 50 characters for the class name\n");
+    printf("\nPlease enter the name of the class you want to add below, using less than 50 characters for the class name\n\n");
     
     fgets(input, sizeof(input), stdin);
     
@@ -191,7 +191,7 @@ void classEditor(FILE * pointer){
             break;
         }
         if(!flag){
-            printf("Please enter a valid input!");
+            printf("\nPlease enter a valid input!\n\n");
             scanf("%d", &input);
         }
     }
@@ -273,7 +273,7 @@ double gradeCalculator(FILE * pointer, char * fileName){
 }
 
 void assignmentWriter(FILE * pointer, char * cat, char * fileName){
-    printf("\nPlease enter a numerical decimal value for the grade which you received on this assignment, out of 100. If you received a 93 on you assignment, enter, 93.0\n");
+    printf("\nPlease enter a numerical decimal value for the grade which you received on this assignment, out of 100. If you received a 93 on you assignment, enter, 93.0\n\n");
     double ans;
     scanf("%lf", &ans);
     char line[50];
@@ -432,7 +432,7 @@ void classMenu(int pos, class classes[]){
             fscanf(pointer, "%[^\n]", line);
             printf("\n%s", line);
 
-            printf("\n\nThe categories which you have for this class are displayed above. Enter the category which you would like to enter an assignment for, exactly as it is displayed above.\n");
+            printf("\n\nThe categories which you have for this class are displayed above. Enter the category which you would like to enter an assignment for, exactly as it is displayed above.\n\n");
             char catEntry[50];
             char c = getchar();
             fgets(catEntry, sizeof(catEntry), stdin);
@@ -550,7 +550,7 @@ int main(){
                     }
                 }
                 if(!flag){
-                    printf("Enter a valid number!\n");
+                    printf("\nEnter a valid number!\n\n");
                 }
             }
             
@@ -565,7 +565,7 @@ int main(){
             exit(0);
         }
         else{
-            printf("Please enter a valid input \n\n");
+            printf("\nPlease enter a valid input! \n\n");
             validInput = 0;
         }
         

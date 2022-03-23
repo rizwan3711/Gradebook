@@ -1,4 +1,3 @@
 math 18
-mmw 12
 physics 2a
 mus 17
